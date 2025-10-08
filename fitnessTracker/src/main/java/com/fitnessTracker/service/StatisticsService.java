@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Random;
 
 @Service
 public class StatisticsService {
@@ -81,6 +82,36 @@ public class StatisticsService {
         response.setUsername(goal.getUser().getUsername());
         return response;
     }
+/// //////////////////////////////////////////////////////////
+    public HomepageResponse getHomepageData(String username) {
+        HomepageResponse response = new HomepageResponse();
+
+        // 1. Get today's summary by reusing the existing method
+        response.setTodaySummary(getDashboardStats(username));
+
+        // 2. Get the user's routines to suggest as a schedule
+        List<Routine> routines = routineRepository.findByUserUsername(username);
+        response.setSuggestedSchedule(routines.stream()
+                .map(this::toRoutineResponse)
+                .collect(Collectors.toList()));
+
+        // 3. Get a random quote
+        List<String> quotes = List.of(
+                "The only bad workout is the one that didn't happen.",
+                "Your body can stand almost anything. It’s your mind that you have to convince.",
+                "Success isn’t always about greatness. It’s about consistency."
+        );
+        String randomQuote = quotes.get(new Random().nextInt(quotes.size()));
+        response.setQuote(randomQuote);
+
+        return response;
+    }
+
+
+
+
+
+
 
     private FoodLogResponse toFoodLogResponse(FoodLog log) {
         FoodLogResponse response = new FoodLogResponse();
