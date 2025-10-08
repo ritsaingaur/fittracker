@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/index.html", "/login", "/register", "/*.js", "/*.css", "/*.ico", "/*.png").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/routines/**").permitAll()
                         .requestMatchers("/api/goals/**").permitAll()
@@ -65,4 +66,5 @@ public class WebSecurityConfig {
 
         return http.build();
     }
+
 }
